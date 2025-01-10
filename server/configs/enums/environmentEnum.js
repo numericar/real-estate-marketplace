@@ -1,0 +1,8 @@
+const ENVIRONMENT_ENUM = {
+    DEVELOPMENT: 1,
+    TESTING: 2,
+    PRE_PRODUCTION: 3,
+    PRODUCTION: 4
+}
+
+export default ENVIRONMENT_ENUM;
