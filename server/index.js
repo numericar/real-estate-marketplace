@@ -5,6 +5,8 @@ import path from "path";
 
 import ENVIRONMENT_ENUM from "./configs/enums/environmentEnum.js";
 
+import userRoutes from './routes/user.route.js'
+
 const ENV_TYPE = ENVIRONMENT_ENUM.PRODUCTION
 const ENVIRONMENT_FILE_NAME = getEnvironmentFileName(ENV_TYPE);
 const ENVIRONMENT_PATH = path.join(path.resolve(), ENVIRONMENT_FILE_NAME);
@@ -19,6 +21,8 @@ mongoose.connect(mongoConnectionString).then(() => {
 }).catch(error => console.error(error));
 
 const app = express();
+
+app.use("/api/users", userRoutes);
 
 const port = process.env.PORT;
 app.listen(port, () => {
