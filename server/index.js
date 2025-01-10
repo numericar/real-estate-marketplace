@@ -6,10 +6,11 @@ import path from "path";
 import ENVIRONMENT_ENUM from "./configs/enums/environmentEnum.js";
 
 const ENV_TYPE = ENVIRONMENT_ENUM.PRODUCTION
-const ENVIRONMENT_FILE = getEnvironment(ENV_TYPE);
+const ENVIRONMENT_FILE_NAME = getEnvironmentFileName(ENV_TYPE);
+const ENVIRONMENT_PATH = path.join(path.resolve(), ENVIRONMENT_FILE_NAME);
 
 dotenv.config({
-    path: path.join(path.resolve(), ENVIRONMENT_FILE)
+    path: ENVIRONMENT_PATH
 });
 
 const mongoConnectionString = process.env.MONGO_DB_URL;
@@ -24,7 +25,7 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-function getEnvironment(envType) {
+function getEnvironmentFileName(envType) {
     switch (envType) {
         case ENVIRONMENT_ENUM.DEVELOPMENT:
             return ".env.development.local";
