@@ -1,12 +1,18 @@
+// import libraries
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 
+// import enums
 import ENVIRONMENT_ENUM from "./configs/enums/environmentEnum.js";
 
+// import routes
 import userRoutes from "./routes/user.route.js"
 import authRoutes from "./routes/auth.route.js";
+
+// import middlewares
+import { errorResponseHandler } from "./middlewares/error.middleware.js";
 
 const ENV_TYPE = ENVIRONMENT_ENUM.PRODUCTION
 const ENVIRONMENT_FILE_NAME = getEnvironmentFileName(ENV_TYPE);
@@ -27,6 +33,8 @@ app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/auths", authRoutes);
+
+app.use(errorResponseHandler);
 
 const port = process.env.PORT;
 app.listen(port, () => {

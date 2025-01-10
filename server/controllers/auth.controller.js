@@ -1,8 +1,9 @@
 import bcryptjs from "bcryptjs";
+import { errorInstanceHandler } from "../middlewares/error.middleware.js";
 
 import User from "../models/user.model.js";
 
-export async function signUp(req, res) {
+export async function signUp(req, res, next) {
     const { username, email, password } = req.body;
 
     try {
@@ -22,10 +23,6 @@ export async function signUp(req, res) {
             data: null,
         });
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: error.message,
-            data: null,
-        });
+        next(errorInstanceHandler(400, error.message));
     }
 }
