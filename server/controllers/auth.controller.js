@@ -34,19 +34,19 @@ export async function signIn(req, res, next) {
 
         const validUser = await User.findOne({ email: email });
         if (!validUser) {
-            next(404, "User not found");
+            next(errorInstanceHandler(404, "User not found"));
             return;
         } 
 
         const validPassword = bcryptjs.compareSync(password, validUser.password);
         if (!validPassword) {
-            next(401, "wrong credebtials");
+            next(errorInstanceHandler(401, "wrong credebtials"));
             return;
         }
 
         const JWT_SECRET = process.env.JWT_SECRET;
         if (!JWT_SECRET) {
-            next(500, "Authentication failed");
+            next(errorInstanceHandler(500, "Authentication failed"));
             return;
         }
 
@@ -60,10 +60,14 @@ export async function signIn(req, res, next) {
             httpOnly: true
         });
 
+        const user = {
+            username: validUser.username
+        }
+
         res.status(200).json({
             status: true,
             message: "Successful",
-            data: null
+            data: user
         })
 
     } catch (error) {
