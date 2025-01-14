@@ -74,3 +74,51 @@ export async function signIn(req, res, next) {
         next(errorInstanceHandler(400, error.message));
     }
 }
+
+export async function googleSignIn(req, res, next) {
+    try {
+        const { username, email, photo } = req.body;
+
+        const validUser = await User.findOne({ email: email });
+
+        let user = null;
+
+        if (!validUser) {
+            // sign up
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+            const newUser = new User({
+                username: username.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4),
+                email: email,
+                password: hashedPassword,
+                avatar: photo
+            });
+
+            user = await newUser.save();
+        } else {
+            user = validUser;
+        }
+
+        // sign in
+        const token = jwt.sign({
+            id: user._id
+        }, process.env.JWT_SECRET);
+
+        res.cookie("access_token", token, {
+            httpOnly: true
+        })
+        
+        const responseUser = {
+            username: user.username
+        }
+
+        res.status(200).json({
+            status: true,
+            message: "Successful",
+            data: responseUser
+        })
+
+    } catch (error) {
+        next(errorInstanceHandler(401, error.message));
+    }
+}
