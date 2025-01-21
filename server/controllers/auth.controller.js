@@ -109,7 +109,8 @@ export async function googleSignIn(req, res, next) {
         })
         
         const responseUser = {
-            username: user.username
+            username: user.username,
+            avatar: photo
         }
 
         res.status(200).json({
